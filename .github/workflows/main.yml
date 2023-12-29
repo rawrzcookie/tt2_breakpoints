@@ -1,0 +1,42 @@
+name: Run breakpoints.py
+
+# trigger using cron set at 5 minute intervals
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  build:
+    # use latest available version of Ubuntu
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # set up Python 3.10 (64-bit) instance
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+        architecture: "x64"
+
+    # use pip to install necessary dependencies
+    - name: Install dependencies
+      run: |
+        pip install requests
+
+    # run breakpoints.py
+    - name: Run breakpoints.py
+      # read secrets and create environment variables
+      env:
+        WEBHOOK: ${{ secrets.WEBHOOK }}
+        FILE_NAME: breakpoints.csv
+      run: |
+        python breakpoints.py $FILE_NAME
+        git config --global user.name "${GITHUB_ACTOR}"
+        git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+        git add .
+        git commit -m "Update" || echo "nothing to commit"
+        git push
+
