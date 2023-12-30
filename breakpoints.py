@@ -49,7 +49,7 @@ def to_csv(json):
     currencies = [p["currency"] for p in percentile_data]
     
     # Read the CSV file and create it if it doesn't exist
-    with open("data.csv", "r+") as f:
+    with open("breakpoints.csv", "r+") as f:
         reader = csv.reader(f)
         rows = list(reader)
         
