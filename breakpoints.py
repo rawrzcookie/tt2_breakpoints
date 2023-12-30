@@ -139,7 +139,7 @@ def process_sql(name, payload):
         # if current event name is different than previous
         if (name != previous_event_name):
             # insert new row to database
-            toWebhook("post", conn, cur, payload, name)
+            toWebhook("post", payload, name)
 
         # else if previous message id is not None
         elif previous_message_id:
