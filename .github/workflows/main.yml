@@ -2,9 +2,11 @@ name: Run breakpoints.py
 
 # trigger using cron set at 5 minute intervals
 on:
+  repository_dispatch:
+    types: do-something
   workflow_dispatch:
-  schedule:
-    - cron: '*/5 * * * *'
+  # schedule:
+  #  - cron: '*/5 * * * *'
 
 jobs:
   build:
