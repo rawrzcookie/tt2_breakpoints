@@ -52,18 +52,22 @@ def to_csv(json):
     with open("breakpoints.csv", "r+") as f:
         reader = csv.reader(f)
         rows = list(reader)
-        
-        # obtain last row
-        last_row = rows[-1]
 
+        # Remove blank rows at the end of the file
+        while not rows[-1]:  # Check if the last row is empty
+            print(f'popped: {rows.pop()}')  # Remove the last row if it is empty
+
+        # Obtain the last non-empty row
+        last_row = rows[-1] if rows else None  # Get the last non-empty row if it exists
+        
         # Check if the holiday event ID matches the one from breakpoints
-        if last_row[0] == holiday_event_id:
+        if last_row and last_row[0] == holiday_event_id:
             # Update the row with the new currencies
             last_row[1:] = currencies
         else:
             # Add a new row to the CSV with the new holiday event ID and currencies
             new_row = [holiday_event_id] + currencies
-            rows.append(new_row)
+            rows.append(new_row) if new_row else None
         
         # Move the file pointer to the beginning of the file
         f.seek(0)
