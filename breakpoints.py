@@ -35,6 +35,7 @@ def main():
 
 def breakpoints():
     response = requests.get("https://tt2.gamehivegames.com/holiday_event/breakpoint")
+    print(response)
     json_data = response.json()
     return json_data
 
