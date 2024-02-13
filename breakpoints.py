@@ -19,14 +19,15 @@ table_exists = cur.fetchone()[0]
 
 def main():
     response = breakpoints()
-    
-    if "_error" in response:
+
+    # handle error in response
+    if (response is None) or (not response["breakpoint"]):
+        print("No data")
+        return
+    elif "_error" in response:
         code = response["_error"]["http_code"]
         msg = response["_error"]["message"]
         print(f'HTTP Code {code} | {msg}')
-        return
-    elif not response["breakpoint"]:
-        print("No data")
         return
 
     name, payload = message(response)
@@ -35,10 +36,19 @@ def main():
 
 def breakpoints():
     response = requests.get("https://tt2.gamehivegames.com/holiday_event/breakpoint")
+    # debug; print response code and response contents
     print(response)
-    json_data = response.json()
-    print(json_data)
-    return json_data
+    print(response.text)
+
+    # try to convert response to json object.
+    # if successful, return json_data
+    # otherwise, print error message and return none
+    try:
+        json_data = response.json()
+        return json_data
+    except Exception as e:
+        print(f"An error occurred: {type(e).__name__}")
+        return None
 
 def to_csv(json):
     # Get the JSON data
