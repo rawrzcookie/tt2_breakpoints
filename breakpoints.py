@@ -21,10 +21,13 @@ def main():
     response = breakpoints()
 
     # handle error in response
-    if (response is None) or (not response["breakpoint"]):
+    if response is None:
         print("No data")
         return
-    elif "_error" in response:
+    if "breakpoint" in response and not response["breakpoint"]:
+        print("No data")
+        return
+    if "_error" in response:
         code = response["_error"]["http_code"]
         msg = response["_error"]["message"]
         print(f'HTTP Code {code} | {msg}')
